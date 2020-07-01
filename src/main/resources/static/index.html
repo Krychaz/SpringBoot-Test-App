@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Vue Demo</title>
+
+    <!-- username: root -->
+    <!-- hostname: 127.0.0.1 -->
+    <!-- port: 3306 -->
+
+    <!-- Vue Script -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div id="app">
+    <h1>Vue Testing</h1>
+    <div class="col-md-12">
+        <table  class="table table-dark">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Spec</th>
+            </tr>
+            </thead>
+            <tbody v-for="employee in employees" @click="showEmployee(employee)">
+            <tr>
+                <td>{{employee.id }}</td>
+                <td>{{employee.name}}</td>
+                <td>{{employee.email}}</td>
+                <td>{{employee.spec}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <!--
+    <ul>
+        <li v-for="employee in employees" @click="showEmployee(employee)">{{ employee.id }}</li>
+    </ul>
+    -->
+    <div class="d-flex justify-content-center"v-show="showDetails">
+        <h3>Employee Details</h3>
+
+        <p>
+            <a class="d-inline-flex p-2":href="'https://www.vmware.spec.com/' + selectedEmployee.id" target="_blank">
+                @{{ selectedEmployee.id }} + {{ selectedEmployee.name}} + {{ selectedEmployee.email}} + {{ selectedEmployee.spec}}
+            </a>
+        </p>
+    </div>
+</div>
+
+<script>
+    const apiURL = "http://localhost:8080/api/vmware"
+    new Vue({
+        el: '#app',
+        data(){
+            return {
+                employees: [],
+                showDetails: false,
+                selectedEmployee: ''
+            }
+        },
+        methods: {
+          showEmployee(employee){
+              this.selectedEmployee = employee;
+              this.showDetails = true;
+          }
+        },
+        //lifecycle hook
+        created(){
+            fetch(apiURL)
+                .then(response => {
+                    return response.json();
+                })
+                .then(employees =>{
+                    this.employees = employees;
+            })
+        }
+    });
+</script>
+
+<style>
+    h1{
+        text-align: center;
+    }
+    *{
+        color: azure;
+        background-color: #222;
+    }
+    li{
+        cursor: pointer;
+        padding: 10px;
+    }
+
+    li:hover{
+        color: gold;
+    }
+    .table {
+        margin: 0 auto;
+        width: 90%;
+    }
+    td{
+        cursor: pointer;
+        padding: 10px;
+    }
+    td:hover{
+        color: gold;
+    }
+    p{
+        display: inline;
+    }
+
+
+</style>
+</body>
+</html>
